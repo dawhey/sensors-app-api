@@ -28,9 +28,10 @@ class SensorsEntry(db.Model):
 
     def export_data(self):
         data = {
-            'timestamp' : self.timestamp,
-            'temperature' : self.temperature,
-            'humidity' : self.humidity
+            'id': self.id,
+            'timestamp': self.timestamp,
+            'temperature': self.temperature,
+            'humidity': self.humidity
         }
         return data
 
