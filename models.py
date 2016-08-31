@@ -9,6 +9,20 @@ class ValidationError(ValueError):
     pass
 
 
+class ApiError:
+    def __init__(self, status, error, message):
+        self.status = status
+        self.error = error
+        self.message = message
+
+    def export(self):
+        error = {'status': self.status,
+                 'error': self.error,
+                 'message': self.message
+                 }
+        return error
+
+
 class SensorsEntry(db.Model):
     __tablename__ = 'sensors_entries'
 
