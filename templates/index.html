@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <title>Sensors data entries</title>
-</head>
-<body>
-    <div class="container">
-        <div class="jumbotron" >
-            <h2>Raspberry Pi sensors data provider</h2>
-            <p>by Dawid Heyman</p>
-        </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <title>Sensors data entries</title>
+    </head>
+    <body>
         <div class="container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in entries %}
+            <div class="jumbotron" >
+                <h2>Raspberry Pi sensors data provider</h2>
+                <p>by Dawid Heyman</p>
+            </div>
+            <div class="container">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
-                            <td>{{ entry.temperature }}</td>
-                            <td>{{ entry.humidity }}</td>
+                            <th>Timestamp</th>
+                            <th>Temperature</th>
+                            <th>Humidity</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                            <tr>
+                                <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
+                                <td>{{ entry.temperature }}</td>
+                                <td>{{ entry.humidity }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel panel-footer">
+                <p><strong>Sensors used:</strong></p>
+                <p>DS18B20 <small>(for temperature)</small>, DHT11 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
+            </div>
         </div>
-        <div class="panel panel-footer">
-            <p><strong>Sensors used:</strong></p>
-            <p>DS18B20 <small>(for temperature)</small>, DHT11 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
-        </div>
-    </div>
-</body>
+    </body>
 </html>
