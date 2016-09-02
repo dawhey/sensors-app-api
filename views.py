@@ -3,9 +3,11 @@ from models import *
 from flask import jsonify, request, render_template
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    return '<h1>Sensors API</h1> <h2> (currently in development) </h2>'
+    last_entries = SensorsEntry.query.order_by(SensorsEntry.timestamp.desc()).limit(10)
+    all_entries = SensorsEntry.query.all()
+    return render_template('index.html', last_entries=last_entries, all_entries=all_entries)
 
 
 @app.route('/api/entries', methods=['GET'])
@@ -29,9 +31,3 @@ def post_entry():
     db.session.add(entry)
     db.session.commit()
     return jsonify(entry.export_data()), 201
-
-
-@app.route('/entries', methods=['GET'])
-def list_entries():
-    entries = SensorsEntry.query.all()
-    return render_template('index.html', entries=entries)

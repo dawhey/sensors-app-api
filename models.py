@@ -27,11 +27,11 @@ class SensorsEntry(db.Model):
     __tablename__ = 'sensors_entries'
 
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, unique=True, default=datetime.datetime.utcnow())
+    timestamp = db.Column(db.DateTime, unique=True, default=datetime.datetime.now())
     temperature = db.Column(db.Float)
     humidity = db.Column(db.Float)
 
-    def __init__(self, timestamp=datetime.datetime.utcnow(), temperature=0.0, humidity=0.0):
+    def __init__(self, timestamp=datetime.datetime.now(), temperature=0.0, humidity=0.0):
         self.timestamp = timestamp
         self.temperature = temperature
         self.humidity = humidity

@@ -3,36 +3,87 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+        <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <title>Sensors data entries</title>
     </head>
     <body>
+        <div class="jumbotron text-center" style="background-image: url({{ url_for('static', filename='images/blurredbackground.jpg') }});" >
+            <img src="{{ url_for('static', filename='images/RaspberryPi.png') }}" class="img-rounded" width="300" height="300">
+            <h1>Raspberry Pi Thesis Project</h1>
+            <p>by</p>
+            <h2>Dawid Heyman</h2>
+        </div>
         <div class="container">
-            <div class="jumbotron" >
-                <h2>Raspberry Pi sensors data provider</h2>
-                <p>by Dawid Heyman</p>
-            </div>
-            <div class="container">
-                <table class="table">
-                    <thead>
+            <div class="page-header"><h1>Last 10 sensor readings</h1></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in last_entries %}
                         <tr>
-                            <th>Timestamp</th>
-                            <th>Temperature</th>
-                            <th>Humidity</th>
+                            <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
+                            <td>{{ entry.temperature }}</td>
+                            <td>{{ entry.humidity }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in entries %}
-                            <tr>
-                                <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
-                                <td>{{ entry.temperature }}</td>
-                                <td>{{ entry.humidity }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h1>All readings</h1>
+            <canvas id="sensorChart" width="400" height="200"></canvas>
+            <script>
+            var ctx = document.getElementById("sensorChart");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [{% for item in all_entries %}
+                          "{{item.timestamp.strftime("%d %b %H:%M:%S")}}",
+                      {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'Temperature',
+                        data: [{% for item in all_entries %}
+                              "{{item.temperature}}",
+                          {% endfor %}
+                        ],
+                        borderColor: 'rgba(255,99,132,1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Humidity',
+                        data: [{% for item in all_entries %}
+                              "{{item.humidity}}",
+                          {% endfor %}
+                        ],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                displayFormats: {
+                                    quarter: 'MMM YYYY'
+                                }
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:false
+                            }
+                        }]
+                    }
+                }
+            });
+            </script>
             <div class="panel panel-footer">
                 <p><strong>Sensors used:</strong></p>
                 <p>DS18B20 <small>(for temperature)</small>, DHT11 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
