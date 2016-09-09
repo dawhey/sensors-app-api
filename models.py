@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from sensorsapi import app
 import datetime
 
@@ -6,6 +7,10 @@ db = SQLAlchemy(app)
 
 
 class ValidationError(ValueError):
+    pass
+
+
+class AuthorizationError(ValueError):
     pass
 
 
@@ -21,6 +26,34 @@ class ApiError:
                  'message': self.message
                  }
         return error
+
+
+class Device(db.Model):
+    __tablename__ = 'devices'
+
+    serial_no = db.Column(db.String, primary_key=True, unique=True)
+    device_name = db.Column(db.String)
+    password_hash = db.Column(db.String(128))
+
+    def __init__(self, serial_no, password, device_name='Rapberry Pi'):
+        self.device_name = device_name
+        self.serial_no = serial_no
+        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256:100000')
+
+    def __repr__(self):
+        print(self.device_name + ' serial no. ' + self.serial_no)
+
+    @staticmethod
+    def authorize(serial_no, password):
+        device = Device.query.filter(Device.serial_no == serial_no).first()
+        if device is not None:
+            authorized = check_password_hash(device.password_hash, password)
+            if authorized:
+                return True
+            else:
+                return AuthorizationError("Wrong password for serial number: " + serial_no)
+        else:
+            return AuthorizationError("Device with this serial number does not exist")
 
 
 class SensorsEntry(db.Model):
