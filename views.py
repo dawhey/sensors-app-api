@@ -26,9 +26,11 @@ def get_entry(id):
 def post_entry():
     entry = SensorsEntry()
     entry.import_data(request.json)
-    db.session.add(entry)
-    db.session.commit()
-    return jsonify(entry.export_data()), 201
+    if Device.authorize(entry.credentials):
+        db.session.add(entry)
+        db.session.commit()
+        return jsonify(entry.export_data()), 201
+
 
 @app.route('/entries', methods=['GET'])
 def list_entries():

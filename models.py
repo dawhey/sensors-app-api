@@ -28,6 +28,12 @@ class ApiError:
         return error
 
 
+class Credentials:
+    def __init__(self, serial_no='', password=''):
+        self.serial_no = serial_no
+        self.password = password
+
+
 class Device(db.Model):
     __tablename__ = 'devices'
 
@@ -44,16 +50,16 @@ class Device(db.Model):
         print(self.device_name + ' serial no. ' + self.serial_no)
 
     @staticmethod
-    def authorize(serial_no, password):
-        device = Device.query.filter(Device.serial_no == serial_no).first()
+    def authorize(credentials):
+        device = Device.query.filter(Device.serial_no == credentials.serial_no).first()
         if device is not None:
-            authorized = check_password_hash(device.password_hash, password)
+            authorized = check_password_hash(device.password_hash, credentials.password)
             if authorized:
                 return True
             else:
-                return AuthorizationError("Wrong password for serial number: " + serial_no)
+                raise AuthorizationError("Wrong password for serial number: " + credentials.serial_no)
         else:
-            return AuthorizationError("Device with this serial number does not exist")
+            raise AuthorizationError("Device with this serial number does not exist")
 
 
 class SensorsEntry(db.Model):
@@ -68,6 +74,7 @@ class SensorsEntry(db.Model):
         self.timestamp = timestamp
         self.temperature = temperature
         self.humidity = humidity
+        self.credentials = Credentials()
 
     def __repr__(self):
         print('Entry no. {0} \nTimestamp = {1} \nTemperature = {2} \nHumidity = {3}\n ',
@@ -84,9 +91,11 @@ class SensorsEntry(db.Model):
 
     def import_data(self, data):
         try:
+            self.credentials.serial_no = data['serial_no']
+            self.credentials.password = data['password']
             self.timestamp = data['timestamp']
             self.temperature = data['temperature']
             self.humidity = data['humidity']
         except KeyError as e:
-            raise ValidationError('Missing key in data ' + e.args[0])
+            raise ValidationError('Following key in request is missing: ' + e.args[0])
         return self
