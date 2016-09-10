@@ -35,7 +35,7 @@ class Credentials:
 
 
 class Device(db.Model):
-    __tablename__ = 'devices'
+    __tablename__ = 'device'
 
     serial_no = db.Column(db.String, primary_key=True, unique=True)
     device_name = db.Column(db.String)
@@ -55,7 +55,7 @@ class Device(db.Model):
         if device is not None:
             authorized = check_password_hash(device.password_hash, credentials.password)
             if authorized:
-                return True
+                return device.serial_no
             else:
                 raise AuthorizationError("Wrong password for serial number: " + credentials.serial_no)
         else:
@@ -63,12 +63,15 @@ class Device(db.Model):
 
 
 class SensorsEntry(db.Model):
-    __tablename__ = 'sensors_entries'
+    __tablename__ = 'sensors_entry'
 
     id = db.Column(db.Integer, primary_key=True)
+    device_serial_no = db.Column(db.String, db.ForeignKey('device.serial_no'))
     timestamp = db.Column(db.DateTime, unique=True, default=datetime.datetime.now())
     temperature = db.Column(db.Float)
     humidity = db.Column(db.Float)
+
+    device = db.relationship("Device")
 
     def __init__(self, timestamp=datetime.datetime.now(), temperature=0.0, humidity=0.0):
         self.timestamp = timestamp

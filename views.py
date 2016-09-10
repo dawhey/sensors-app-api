@@ -26,7 +26,9 @@ def get_entry(id):
 def post_entry():
     entry = SensorsEntry()
     entry.import_data(request.json)
-    if Device.authorize(entry.credentials):
+    authorized_serial_no = Device.authorize(entry.credentials)
+    if authorized_serial_no:
+        entry.device_serial_no = authorized_serial_no
         db.session.add(entry)
         db.session.commit()
         return jsonify(entry.export_data()), 201

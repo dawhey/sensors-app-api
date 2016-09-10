@@ -24,6 +24,7 @@
                         <th>Timestamp</th>
                         <th>Temperature</th>
                         <th>Humidity</th>
+                        <th>Device serial no.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,7 @@
                             <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
                             <td>{{ entry.temperature }}</td>
                             <td>{{ entry.humidity }}</td>
+                            <td>{{ entry.device_serial_no }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
