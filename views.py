@@ -17,6 +17,15 @@ def get_entries():
     return jsonify({'entries': entries})
 
 
+@app.route('/api/latest', methods=['GET'])
+def get_latest_entries():
+    last_entries = []
+    for entry in SensorsEntry.query.order_by(SensorsEntry.timestamp.desc()).limit(10):
+        last_entries.append(entry.export_data())
+
+    return jsonify({'entries': last_entries})
+
+
 @app.route('/api/entries/<id>', methods=['GET'])
 def get_entry(id):
     return jsonify(SensorsEntry.query.get_or_404(id).export_data())
