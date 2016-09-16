@@ -12,8 +12,9 @@
     <body>
         <div class="jumbotron text-center" style="background-image: url({{ url_for('static', filename='images/blurredbackground.jpg') }});" >
             <img src="{{ url_for('static', filename='images/header_icon.png') }}" class="img-rounded" width="300" height="300">
-            <h1>Raspberry Pi Thesis Project</h1>
             </br></br>
+            <h1>Raspberry Pi Thesis Project</h1>
+            </br>
         </div>
         <div class="container">
             <div class="page-header"><h1>Last 10 sensor readings</h1></div>
@@ -21,8 +22,8 @@
                 <thead>
                     <tr>
                         <th>Timestamp</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
+                        <th>Temperature (℃) </th>
+                        <th>Humidity (%)</th>
                         <th>Device serial no.</th>
                     </tr>
                 </thead>
@@ -31,7 +32,7 @@
                         <tr>
                             <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
                             <td>{{ entry.temperature }}</td>
-                            <td>{{ entry.humidity }}</td>
+                            <td>{{ '%0.3f' % entry.humidity|float }}</td>
                             <td>{{ entry.device_serial_no }}</td>
                         </tr>
                     {% endfor %}
@@ -90,8 +91,8 @@
             </script>
             <div class="panel panel-footer">
                 <p><strong>Sensors used:</strong></p>
-                <p>DS18B20 <small>(for temperature)</small>, DHT11 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
-                <p>Created by Dawid Heyman.</p>
+                <p>DS18B20 <small>(for temperature)</small>, DHT22 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
+                <p><small>Created by Dawid Heyman.</small></p>
             </div>
         </div>
     </body>
