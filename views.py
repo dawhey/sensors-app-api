@@ -46,5 +46,5 @@ def post_entry():
 @app.route('/entries', methods=['GET'])
 def list_entries():
     last_entries = SensorsEntry.query.order_by(SensorsEntry.timestamp.desc()).limit(10)
-    all_entries = SensorsEntry.query.all()
+    all_entries = SensorsEntry.query.order_by(SensorsEntry.timestamp.desc())
     return render_template('index.html', last_entries=last_entries, all_entries=all_entries)

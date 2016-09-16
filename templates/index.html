@@ -13,8 +13,7 @@
         <div class="jumbotron text-center" style="background-image: url({{ url_for('static', filename='images/blurredbackground.jpg') }});" >
             <img src="{{ url_for('static', filename='images/header_icon.png') }}" class="img-rounded" width="300" height="300">
             <h1>Raspberry Pi Thesis Project</h1>
-            <p>by</p>
-            <h2>Dawid Heyman</h2>
+            </br></br>
         </div>
         <div class="container">
             <div class="page-header"><h1>Last 10 sensor readings</h1></div>
@@ -50,7 +49,6 @@
                       {% endfor %}
                     ],
                     datasets: [{
-                        showLine: false,
                         label: 'Temperature',
                         data: [{% for item in all_entries %}
                               "{{item.temperature}}",
@@ -60,7 +58,6 @@
                         borderWidth: 1
                     }, {
                         label: 'Humidity',
-                        showLine: false,
                         data: [{% for item in all_entries %}
                               "{{item.humidity}}",
                           {% endfor %}
@@ -94,6 +91,7 @@
             <div class="panel panel-footer">
                 <p><strong>Sensors used:</strong></p>
                 <p>DS18B20 <small>(for temperature)</small>, DHT11 <small>(for humidity)</small>, Waveshare Sound Sensor + MCP3008 <small>(for sound detection)</small></p>
+                <p>Created by Dawid Heyman.</p>
             </div>
         </div>
     </body>
