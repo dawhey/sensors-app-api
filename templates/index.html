@@ -50,6 +50,7 @@
                       {% endfor %}
                     ],
                     datasets: [{
+                        showLine: false,
                         label: 'Temperature',
                         data: [{% for item in all_entries %}
                               "{{item.temperature}}",
@@ -59,6 +60,7 @@
                         borderWidth: 1
                     }, {
                         label: 'Humidity',
+                        showLine: false,
                         data: [{% for item in all_entries %}
                               "{{item.humidity}}",
                           {% endfor %}
@@ -78,7 +80,10 @@
                             }
                         }],
                         yAxes: [{
-                            ticks: {
+                            scaleLabel: {
+                                display: true,
+                                labelString: '℃ / % of humidity'
+                            }, ticks: {
                                 beginAtZero:false
                             }
                         }]
