@@ -32,7 +32,7 @@
                         <tr>
                             <td>{{ entry.timestamp.strftime("%d %b %Y %H:%M:%S")}}</td>
                             <td>{{ entry.temperature }}</td>
-                            <td>{{ '%0.3f' % entry.humidity|float }}</td>
+                            <td>{{ '%0.1f' % entry.humidity|float }}</td>
                             <td>{{ entry.device_serial_no }}</td>
                         </tr>
                     {% endfor %}
@@ -60,7 +60,7 @@
                     }, {
                         label: 'Humidity',
                         data: [{% for item in all_entries %}
-                              "{{item.humidity}}",
+                              "{{'%0.1f' % item .humidity|float}}",
                           {% endfor %}
                         ],
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -70,12 +70,7 @@
                 options: {
                     scales: {
                         xAxes: [{
-                            type: 'time',
-                            time: {
-                                displayFormats: {
-                                    quarter: 'MMM YYYY'
-                                }
-                            }
+                            type: 'time'
                         }],
                         yAxes: [{
                             scaleLabel: {
