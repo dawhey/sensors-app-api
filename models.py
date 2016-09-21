@@ -88,7 +88,8 @@ class SensorsEntry(db.Model):
             'id': self.id,
             'timestamp': self.timestamp,
             'temperature': self.temperature,
-            'humidity': self.humidity
+            'humidity': self.humidity,
+            'device': self.device_serial_no
         }
         return data
 
