@@ -11,7 +11,7 @@ def index():
 @app.route('/api/entries', methods=['GET'])
 def get_entries():
     entries = []
-    for entry in SensorsEntry.query.order_by(SensorsEntry.timestamp.desc()):
+    for entry in SensorsEntry.query.order_by(SensorsEntry.timestamp.asc()):
         entries.append(entry.export_data())
 
     return jsonify({'entries': entries})
