@@ -50,6 +50,8 @@
                       {% endfor %}
                     ],
                     datasets: [{
+                        pointRadius: 1,
+                        pointHitRadius: 5,
                         label: 'Temperature',
                         data: [{% for item in all_entries %}
                               "{{item.temperature}}",
@@ -58,6 +60,8 @@
                         borderColor: 'rgba(255,99,132,1)',
                         borderWidth: 1
                     }, {
+                        pointRadius: 1,
+                        pointHitRadius: 5,
                         label: 'Humidity',
                         data: [{% for item in all_entries %}
                               "{{'%0.1f' % item .humidity|float}}",
