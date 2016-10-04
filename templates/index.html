@@ -42,7 +42,7 @@
             <canvas id="sensorChart" width="400" height="200"></canvas>
             <script>
             var ctx = document.getElementById("sensorChart");
-            var myChart = new Chart(ctx, {
+            var dataChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: [{% for item in all_entries %}
@@ -50,7 +50,7 @@
                       {% endfor %}
                     ],
                     datasets: [{
-                        pointRadius: 1,
+                        pointRadius: 0,
                         pointHitRadius: 5,
                         label: 'Temperature',
                         data: [{% for item in all_entries %}
@@ -72,9 +72,18 @@
                     }]
                 },
                 options: {
+                    animation: {
+                        duration: 0
+                    },
                     scales: {
                         xAxes: [{
-                            type: 'time'
+                            type: 'time',
+                            unit: 'day',
+                              unitStepSize: 1,
+                              time: {
+                                displayFormats: {
+                                   'day': 'MMM DD'
+                                }}
                         }],
                         yAxes: [{
                             scaleLabel: {
