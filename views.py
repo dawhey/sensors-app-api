@@ -69,7 +69,7 @@ def send_warning():
 
 
 def notify_user_about_entry(entry):
-    data = 'Temp: {0}℃   Hum: {1}%'.format(round(entry.temperature, 2), round(entry.humidity, 1))
+    data = 'Temp: {0}℃  Hum: {1}%'.format(round(entry.temperature, 2), round(entry.humidity, 1))
     push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
     result = push_service.notify_topic_subscribers(tag=1, topic_name="warnings", color="#E64A19",
                                                    message_body=entry.timestamp.strftime("%d %B %H:%M"),
