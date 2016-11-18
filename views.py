@@ -41,7 +41,6 @@ def post_entry():
     authorized_serial_no = Device.authorize(entry.credentials)
     if authorized_serial_no:
         entry.device_serial_no = authorized_serial_no
-        entry.notify_user()
         db.session.add(entry)
         db.session.commit()
         notify_user_about_entry(entry)
