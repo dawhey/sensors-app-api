@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pyfcm import FCMNotification
 from sensorsapi import app
 from models import *
@@ -40,8 +41,10 @@ def post_entry():
     authorized_serial_no = Device.authorize(entry.credentials)
     if authorized_serial_no:
         entry.device_serial_no = authorized_serial_no
+        entry.notify_user()
         db.session.add(entry)
         db.session.commit()
+        notify_user_about_entry(entry)
         return jsonify(entry.export_data()), 201
 
 
@@ -53,14 +56,23 @@ def list_entries():
 
 
 @app.route('/notify', methods=['POST'])
-def send_notification():
+def send_warning():
     data = request.json
     push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
     credentials = Credentials(serial_no=data['serial_no'], password=data['password'])
     authorized_serial_no = Device.authorize(credentials)
 
     if authorized_serial_no:
-        result = push_service.notify_topic_subscribers(topic_name="warnings",
+        result = push_service.notify_topic_subscribers(tag=2, topic_name="warnings", color="#E64A19",
                                                        message_body=data['message_body'],
-                                                       message_title=data['message_title'])
+                                                       message_title="Warning!")
         return jsonify(result), 200
+
+
+def notify_user_about_entry(entry):
+    data = 'Temp: {0}℃   Hum: {1}%'.format(round(entry.temperature, 2), round(entry.humidity, 1))
+    push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
+    result = push_service.notify_topic_subscribers(tag=1, topic_name="warnings", color="#E64A19",
+                                                   message_body=entry.timestamp.strftime("%d %B %H:%M"),
+                                                   message_title=data)
+    return result
