@@ -1,6 +1,8 @@
+from pyfcm import FCMNotification
 from sensorsapi import app
 from models import *
 from flask import jsonify, request, render_template, url_for, redirect
+import os
 
 
 @app.route('/', methods=['GET'])
@@ -48,3 +50,17 @@ def list_entries():
     last_entries = SensorsEntry.query.order_by(SensorsEntry.timestamp.desc()).limit(10)
     all_entries = SensorsEntry.query.order_by(SensorsEntry.timestamp.desc())
     return render_template('index.html', last_entries=last_entries, all_entries=all_entries)
+
+
+@app.route('/notify', methods=['POST'])
+def send_notification():
+    data = request.json
+    push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
+    credentials = Credentials(serial_no=data['serial_no'], password=data['password'])
+    authorized_serial_no = Device.authorize(credentials)
+
+    if authorized_serial_no:
+        result = push_service.notify_topic_subscribers(topic_name="warnings",
+                                                       message_body=data['message_body'],
+                                                       message_title=data['message_title'])
+        return jsonify(result), 200
