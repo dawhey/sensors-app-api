@@ -69,9 +69,18 @@ def send_warning():
 
 
 def notify_user_about_entry(entry):
-    data = 'Temp: {0}℃  Hum: {1}%'.format(round(entry.temperature, 2), round(entry.humidity, 1))
+    temperature_string = 'Temperature: {0} ℃'.format(round(entry.temperature, 2))
+    humidity_string = 'Humidity: {0}%'.format(round(entry.humidity, 1))
     push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
-    result = push_service.notify_topic_subscribers(tag=1, topic_name="warnings", color="#E64A19",
-                                                   message_body=entry.timestamp.strftime("%d %B %H:%M"),
-                                                   message_title=data)
+    result = push_service.notify_topic_subscribers(tag=1, topic_name="warnings", color="#009688",
+                                                   message_body=humidity_string,
+                                                   message_title=temperature_string)
     return result
+
+
+def test_notification(temp, hum):
+    entry = SensorsEntry()
+    entry.humidity = hum
+    entry.temperature = temp
+    result = notify_user_about_entry(entry)
+    print result
