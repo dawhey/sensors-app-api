@@ -54,7 +54,7 @@ def list_entries():
     return render_template('index.html', last_entries=last_entries, all_entries=all_entries)
 
 
-@app.route('/notify', methods=['POST'])
+@app.route('/api/notify', methods=['POST'])
 def send_warning():
     data = request.json
     push_service = FCMNotification(api_key=os.environ['FCM_KEY'])
